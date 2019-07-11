@@ -13,9 +13,9 @@ import sys
 import requests
 import math
 
-API_KEY = os.getenv('API_KEY', 'VVaTsmsM08lYOKOu663RmjOD')
+API_KEY = os.getenv('API_KEY', 'VjDNspOa3SJORcTcDMFvb7dT')
 API_SECRET = os.getenv(
-    'API_SECRET', 'EDiua09FY7r0tJyPkqbwHhTKeJgCbaX9lq40YhQ4V6ajHmr-')
+    'API_SECRET', 'szW3R57a4dUbj9KBjlWZ3L-9g2MOBk2kzBHJEqWFskUDbdTp')
 USE_TESTNET = True if os.getenv('USE_TESTNET', '0') == '1' else False
 TF = os.getenv('TF', '5m')
 CONTRACTS = int(os.getenv('CONTRACTS', '10'))
