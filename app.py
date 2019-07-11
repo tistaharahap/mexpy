@@ -71,8 +71,8 @@ def construct_buy_telegram_message(market_order, fractal_price, vwma_price):
     message = '*Mexpy*\n\nMarket Buy Price: %.2f\nLimit Sell Price: %.2f\nStop Price: %.2f\n\nSymbol: %s\nTF: %s\nContracts: %d\nFractal Price: %.2f\nVWMA: %.2f'
 
     market_buy_price = market_order.get('avgPx')
-    limit_sell_price = format_price(market_buy_price + LIMIT_SELL_MARGIN)
-    stop_price = format_price(market_buy_price + STOP_MARGIN)
+    limit_sell_price = format_price(market_buy_price * 1.004)
+    stop_price = format_price(market_buy_price * 0.996)
 
     message = message % (market_buy_price,
                          limit_sell_price,
@@ -90,8 +90,8 @@ def construct_sell_telegram_message(market_order, fractal_price, vwma_price):
     message = '*Mexpy*\n\n*SOLD!*\n\nOpit Percentage: ~*%.2f*\n\nMarket Buy Price: %.2f\nLimit Sell Price: %.2f\nStop Price: %.2f\n\nSymbol: %s\nTF: %s\nContracts: %d\nFractal Price: %.2f\nVWMA: %.2f'
 
     market_buy_price = market_order.get('avgPx')
-    limit_sell_price = format_price(market_buy_price + LIMIT_SELL_MARGIN)
-    stop_price = format_price(market_buy_price + STOP_MARGIN)
+    limit_sell_price = format_price(market_buy_price * 1.004)
+    stop_price = format_price(market_buy_price * 0.996)
     opit_percentage = (limit_sell_price / market_buy_price - 1.0) * LEVERAGE
 
     message = message % (opit_percentage,
