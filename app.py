@@ -11,6 +11,7 @@ import time
 import logging
 import sys
 import requests
+import math
 
 API_KEY = os.getenv('API_KEY', 'VVaTsmsM08lYOKOu663RmjOD')
 API_SECRET = os.getenv('API_SECRET', 'EDiua09FY7r0tJyPkqbwHhTKeJgCbaX9lq40YhQ4V6ajHmr-')
@@ -161,14 +162,14 @@ def create_orders(current_price: float) -> tuple:
     market_price = format_price(market_buy_order.get('avgPx'))
     logger.info('Market Buy Avg Price: %.2f' % market_price)
 
-    close_order_price = format_price(market_price * 1.004)
+    close_order_price = math.floor(format_price(market_price * 1.004))
     close_order = bitmex_client.Order.Order_new(symbol=SYMBOL,
                                                 orderQty=CONTRACTS,
                                                 ordType='Limit',
                                                 side='Sell',
                                                 price=close_order_price).result()[0]
 
-    stop_order_price = format_price(market_price * 0.996)
+    stop_order_price = math.ceil(format_price(market_price * 0.996))
     logger.info('Stop Order Price: %.2f' % stop_order_price)
     stop_market_order = bitmex_client.Order.Order_new(symbol=SYMBOL,
                                                       orderQty=CONTRACTS,
