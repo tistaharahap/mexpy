@@ -5,7 +5,6 @@ WORKDIR /app
 
 # copy app dependencies
 COPY requirements.txt docker/*.sh ./
-COPY docker/newrelic.ini /newrelic.ini
 
 # install dependecies
 RUN set -ex \
@@ -20,8 +19,6 @@ RUN set -ex \
     # install app dependencies
     && rm -rf /var/lib/apt/lists/* \
     && pip install -r ./requirements.txt --upgrade \
-    && pip install gunicorn --upgrade \
-    && pip install newrelic --upgrade \
     \
     # clean pip cache
     && rm -rf /root/.cache/pip/* \
