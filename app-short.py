@@ -241,7 +241,7 @@ def main() -> None:
     logger.info('VWMA: %.2f' % vwma_value)
     vwma_ideal = last_candle.get('high') >= vwma_value
 
-    if vwma_ideal and red_candle and olc3 > last_fractal:
+    if vwma_ideal and red_candle and olc3 < last_fractal:
         orders = create_orders(current_price=last_candle.get('close'))
         logger.info('Market Sell Order ID: %s' % orders[0].get('orderID'))
         logger.info('Close Order ID: %s' % orders[1].get('orderID'))
