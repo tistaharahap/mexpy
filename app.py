@@ -161,14 +161,14 @@ def create_orders(current_price: float) -> tuple:
     market_price = format_price(market_buy_order.get('avgPx'))
     logger.info('Market Buy Avg Price: %.2f' % market_price)
 
-    close_order_price = format_price(market_price + LIMIT_SELL_MARGIN)
+    close_order_price = format_price(market_price * 1.004)
     close_order = bitmex_client.Order.Order_new(symbol=SYMBOL,
                                                 orderQty=CONTRACTS,
                                                 ordType='Limit',
                                                 side='Sell',
                                                 price=close_order_price).result()[0]
 
-    stop_order_price = format_price(market_price - STOP_MARGIN)
+    stop_order_price = format_price(market_price * 0.996)
     logger.info('Stop Order Price: %.2f' % stop_order_price)
     stop_market_order = bitmex_client.Order.Order_new(symbol=SYMBOL,
                                                       orderQty=CONTRACTS,
@@ -227,12 +227,14 @@ def main() -> None:
     logger.info('Last Close: %.2f' % last_candle.get('close'))
     logger.info('Last Low: %.2f' % last_candle.get('low'))
     fractal_ideal = last_candle.get('close') > last_fractal
+    ohc3 = (last_candle.get('open')+last_candle.get('high')+last_candle.get('close'))/3
+    green_candle = last_candle.get('close') > last_candle.get('open')
 
     vwma_value = last_candle.get('vwma')
     logger.info('VWMA: %.2f' % vwma_value)
     vwma_ideal = last_candle.get('low') <= vwma_value
 
-    if fractal_ideal and vwma_ideal:
+    if vwma_ideal and green_candle and ohc3 > last_fractal:
         orders = create_orders(current_price=last_candle.get('close'))
         logger.info('Market Buy Order ID: %s' % orders[0].get('orderID'))
         logger.info('Close Order ID: %s' % orders[1].get('orderID'))
