@@ -27,6 +27,7 @@ TG_CHAT_ID = os.getenv('TG_CHAT_ID', '-1001351609280')
 LIMIT_SELL_MARGIN = float(os.getenv('LIMIT_SELL_MARGIN', '40.0'))
 STOP_MARGIN = float(os.getenv('STOP_MARGIN', '50.0'))
 VWMA_PERIOD = int(os.getenv('VWMA_PERIOD', '34'))
+GRACE_PERIOD_IN_MINUTES = int(os.getenv('GRACE_PERIOD_IN_MINUTES', '10'))
 
 bitmex_client = Bitmex(test=USE_TESTNET,
                        api_key=API_KEY,
@@ -189,7 +190,7 @@ def poll_orders(close_order: dict) -> None:
                                                              filter='{"orderID": "%s"}' % order_id,
                                                              count=1).result()[0][0]
         order_status = order_progress.get('ordStatus')
-        if order_status != 'Filled':
+        if order_status != 'Filled' or order_status != 'Canceled':
             time.sleep(REFRESH_TIME)
             _poll(order_id)
 
@@ -227,7 +228,7 @@ def main() -> None:
 
     logger.info('Last Close: %.2f' % last_candle.get('close'))
     logger.info('Last Low: %.2f' % last_candle.get('low'))
-    fractal_ideal = last_candle.get('close') > last_fractal
+
     ohc3 = (last_candle.get('open')+last_candle.get('high')+last_candle.get('close'))/3
     green_candle = last_candle.get('close') > last_candle.get('open')
 
@@ -266,6 +267,11 @@ def loop():
 
 
 if __name__ == '__main__':
+    # Cancel all orders first
+    bitmex_client.Order.Order_cancelAll(symbol=SYMBOL).result()
+
+    # When starting first time, let's wait for a while before making orders
+    time.sleep(GRACE_PERIOD_IN_MINUTES * 60)
     try:
         loop()
     except HTTPError:

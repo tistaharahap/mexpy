@@ -274,6 +274,9 @@ def loop():
 
 
 if __name__ == '__main__':
+    # Cancel all orders first
+    bitmex_client.Order.Order_cancelAll(symbol=SYMBOL).result()
+
     try:
         loop()
     except HTTPError:
