@@ -2,7 +2,7 @@ attrs==19.1.0
 bitmex==0.2.2
 bravado==10.4.1
 bravado-core==5.13.1
-certifi==2019.6.16
+certifi==2022.12.7
 chardet==3.0.4
 dill==0.2.5
 future==0.17.1
